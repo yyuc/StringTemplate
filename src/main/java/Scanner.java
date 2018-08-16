@@ -94,12 +94,16 @@ public class Scanner {
         int i = this.offset + 1;
         int length = this.expression.length();
 
-        while (i < length && this.expression.charAt(i) != '}') {
+        while (i < length && this.isPartOfField(this.expression.charAt(i))) {
             i++;
         }
 
         String content = this.expression.substring(this.offset, i);
 
         return new Token(Symbol.Exp, content, i - this.offset);
+    }
+
+    private boolean isPartOfField(char c) {
+        return c != '.' && c != '}' && c != '{';
     }
 }
