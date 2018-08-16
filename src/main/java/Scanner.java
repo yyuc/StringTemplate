@@ -58,6 +58,20 @@ public class Scanner {
         this.expression = expression;
     }
 
+    public Token next() {
+        if (this.currentToken != null) {
+            this.offset = this.offset + this.currentToken.length;
+        }
+
+        int length = this.expression.length();
+
+        if (this.offset == length) {
+            return Token_EOF;
+        }
+
+        return nextToken();
+    }
+
     public Token nextToken() {
         if (this.offset < this.expression.length() - 1
                 && this.expression.charAt(this.offset) == '{'
@@ -105,5 +119,9 @@ public class Scanner {
 
     private boolean isPartOfField(char c) {
         return c != '.' && c != '}' && c != '{';
+    }
+
+    private boolean isEvaluate() {
+        return this.currentToken != null && this.currentToken.getSymbol() == Symbol.ExpStart;
     }
 }
