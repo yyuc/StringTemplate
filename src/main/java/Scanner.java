@@ -1,6 +1,8 @@
+import sun.nio.cs.ext.TIS_620;
+
 public class Scanner {
 
-    public class Token {
+    public static class Token {
         private Symbol symbol;
         private String content;
         private int length;
@@ -27,6 +29,8 @@ public class Scanner {
     public enum Symbol {
         EOF,
         Text,
+        Exp,
+        Dot("."),
         ExpStart("{{"),
         ExpEnd("}}");
 
@@ -44,6 +48,7 @@ public class Scanner {
     private final static Token Token_Start = new Token(Symbol.ExpStart, "{{", 2);
     private final static Token Token_ExpEnd = new Token(Symbol.ExpEnd, "}}", 2);
     private final static Token Token_EOF = new Token(Symbol.EOF, "", 0);
+    private final static Token Token_Dot = new Token(Symbol.Dot, ".", 1);
 
     private String expression;
     private int offset;
@@ -78,5 +83,23 @@ public class Scanner {
         }
 
         return new Token(Symbol.Text, builder.toString(), i - this.offset);
+    }
+
+    public Token nextExp() {
+        char current = this.expression.charAt(this.offset);
+        if (current == '.') {
+            return Token_Dot;
+        }
+
+        int i = this.offset + 1;
+        int length = this.expression.length();
+
+        while (i < length && this.expression.charAt(i) != '}') {
+            i++;
+        }
+
+        String content = this.expression.substring(this.offset, i);
+
+        return new Token(Symbol.Exp, content, i - this.offset);
     }
 }
