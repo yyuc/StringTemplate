@@ -1,5 +1,3 @@
-import sun.nio.cs.ext.TIS_620;
-
 public class Scanner {
 
     public static class Token {
@@ -23,6 +21,35 @@ public class Scanner {
 
         public int getLength() {
             return this.length;
+        }
+
+        public boolean isText() {
+            return this.getSymbol() == Symbol.Text;
+        }
+
+        public boolean isEOF() {
+            return this.getSymbol() == Symbol.EOF;
+        }
+
+        public boolean isExp() {
+            return this.getSymbol() == Symbol.Exp;
+        }
+
+        public boolean isDot() {
+            return this.getSymbol() == Symbol.Dot;
+        }
+
+        public boolean isExpStart() {
+            return this.getSymbol() == Symbol.ExpStart;
+        }
+
+        public boolean isExpEnd() {
+            return this.getSymbol() == Symbol.ExpEnd;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s: [%s]", symbol, this.getContent());
         }
     }
 
@@ -69,10 +96,19 @@ public class Scanner {
             return Token_EOF;
         }
 
-        return nextToken();
+        return currentToken = nextToken();
     }
 
     public Token nextToken() {
+        if (this.currentToken != null && !this.currentToken.isText() && !this.currentToken.isExpEnd()) {
+            if (this.offset < this.expression.length() - 1
+                    && this.expression.charAt(this.offset) == '}'
+                    && this.expression.charAt(this.offset + 1) == '}') {
+                return Token_ExpEnd;
+            }
+            // Handle onely one } situation.
+            return this.nextExp();
+        }
         if (this.offset < this.expression.length() - 1
                 && this.expression.charAt(this.offset) == '{'
                 && this.expression.charAt(this.offset + 1) == '{') {
@@ -115,6 +151,10 @@ public class Scanner {
         String content = this.expression.substring(this.offset, i);
 
         return new Token(Symbol.Exp, content, i - this.offset);
+    }
+
+    public int getOffset() {
+        return this.offset;
     }
 
     private boolean isPartOfField(char c) {
