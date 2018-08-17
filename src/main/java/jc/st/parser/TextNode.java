@@ -1,3 +1,5 @@
+package jc.st.parser;
+
 public class TextNode extends Node {
 
     public TextNode(String content) {
@@ -5,7 +7,7 @@ public class TextNode extends Node {
     }
 
     @Override
-    public Node getChild() {
-        return null;
+    public Object getValue(Object object) {
+        return this.getContent();
     }
 }

@@ -2,6 +2,7 @@
 .gradle/
 build/
 out/
+StringTemplate.iml
 
 # User-specific stuff:
 .idea/*

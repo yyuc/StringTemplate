@@ -1,3 +1,7 @@
+package jc.st.parser;
+
+import javax.el.ELContext;
+
 public class ExpressionNode extends Node {
     private FieldNode node;
 
@@ -7,8 +11,8 @@ public class ExpressionNode extends Node {
     }
 
     @Override
-    public Node getChild() {
-        return this.node;
+    public Object getValue(Object object) {
+        return this.node.getValue(object);
     }
 
     @Override

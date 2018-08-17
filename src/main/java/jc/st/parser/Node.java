@@ -1,3 +1,5 @@
+package jc.st.parser;
+
 public abstract class Node {
     private String content;
 
@@ -9,7 +11,7 @@ public abstract class Node {
         this.content = content;
     }
 
-    public String getContent(){
+    public String getContent() {
         return this.content;
     }
 
@@ -18,5 +20,5 @@ public abstract class Node {
         return this.content;
     }
 
-    public abstract Node getChild();
+    public abstract Object getValue(Object obj);
 }

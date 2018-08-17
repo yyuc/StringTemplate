@@ -1,3 +1,5 @@
+package jc.st.parser;
+
 import java.util.ArrayList;
 
 public class Parser {
@@ -10,7 +12,7 @@ public class Parser {
         this.scanner = new Scanner(expression);
     }
 
-    public void Build() throws TokenParseException {
+    public ArrayList<Node> build() throws TokenParseException {
         this.skipToken();
         Node text = buildTextNode();
         if (this.currentToken.isEOF()) {
@@ -33,6 +35,8 @@ public class Parser {
                 list.add(text);
             }
         }
+
+        return list;
     }
 
     /**

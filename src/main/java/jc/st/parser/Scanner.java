@@ -1,5 +1,6 @@
-public class Scanner {
+package jc.st.parser;
 
+public class Scanner {
     public static class Token {
         private Symbol symbol;
         private String content;
