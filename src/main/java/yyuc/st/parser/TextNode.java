@@ -1,4 +1,4 @@
-package jc.st.parser;
+package yyuc.st.parser;
 
 public class TextNode extends Node {
 
