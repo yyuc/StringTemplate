@@ -31,10 +31,6 @@ public class Scanner {
             return this.getSymbol() == Symbol.EOF;
         }
 
-        public boolean isExp() {
-            return this.getSymbol() == Symbol.Exp;
-        }
-
         public boolean isDot() {
             return this.getSymbol() == Symbol.Dot;
         }
@@ -85,7 +81,7 @@ public class Scanner {
         this.expression = expression;
     }
 
-    public Token next() {
+    public Token next() throws TokenParseException {
         if (this.currentToken != null) {
             this.offset = this.offset + this.currentToken.length;
         }
@@ -99,14 +95,13 @@ public class Scanner {
         return currentToken = nextToken();
     }
 
-    public Token nextToken() {
+    public Token nextToken() throws TokenParseException {
         if (this.currentToken != null && !this.currentToken.isText() && !this.currentToken.isExpEnd()) {
             if (this.offset < this.expression.length() - 1
                     && this.expression.charAt(this.offset) == '}'
                     && this.expression.charAt(this.offset + 1) == '}') {
                 return Token_ExpEnd;
             }
-            // Handle onely one } situation.
             return this.nextExp();
         }
         if (this.offset < this.expression.length() - 1
@@ -135,33 +130,29 @@ public class Scanner {
         return new Token(Symbol.Text, builder.toString(), i - this.offset);
     }
 
-    public Token nextExp() {
-        char current = this.expression.charAt(this.offset);
-        if (current == '.') {
+    public Token nextExp() throws TokenParseException {
+        char start = this.expression.charAt(this.offset);
+        if (start == '.') {
             return Token_Dot;
         }
 
-        int i = this.offset + 1;
-        int length = this.expression.length();
+        if (Character.isJavaIdentifierStart(start)) {
 
-        while (i < length && this.isPartOfField(this.expression.charAt(i))) {
-            i++;
+            int i = this.offset + 1;
+            int length = this.expression.length();
+
+            while (i < length && Character.isJavaIdentifierStart(this.expression.charAt(i))) {
+                i++;
+            }
+
+            String content = this.expression.substring(this.offset, i);
+
+            return new Token(Symbol.Exp, content, i - this.offset);
         }
-
-        String content = this.expression.substring(this.offset, i);
-
-        return new Token(Symbol.Exp, content, i - this.offset);
+        throw new TokenParseException("Invalid character '" + start + "' at position" + this.offset + " in '" + this.expression + "'");
     }
 
     public int getOffset() {
         return this.offset;
-    }
-
-    private boolean isPartOfField(char c) {
-        return c != '.' && c != '}' && c != '{';
-    }
-
-    private boolean isEvaluate() {
-        return this.currentToken != null && this.currentToken.getSymbol() == Symbol.ExpStart;
     }
 }

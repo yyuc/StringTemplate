@@ -10,7 +10,7 @@ public class Parser {
         this.scanner = new Scanner(expression);
     }
 
-    public void Build() {
+    public void Build() throws TokenParseException {
         this.skipToken();
         Node text = buildTextNode();
         if (this.currentToken.isEOF()) {
@@ -23,8 +23,6 @@ public class Parser {
         if (text != null) {
             list.add(text);
         }
-
-        //list.add(this.buildExpressionNode());
 
         while (!this.currentToken.isEOF()) {
             list.add(this.buildExpressionNode());
@@ -40,26 +38,22 @@ public class Parser {
     /**
      * Skip current token ange generate next token
      */
-    private Scanner.Token skipToken() {
+    private Scanner.Token skipToken() throws TokenParseException {
         Scanner.Token token = this.currentToken;
         this.currentToken = this.scanner.next();
         this.offset = this.scanner.getOffset();
         return token;
     }
 
-    private Scanner.Token skipToken(Scanner.Symbol symbol) {
+    private Scanner.Token skipToken(Scanner.Symbol symbol) throws TokenParseException {
         if (this.currentToken.getSymbol() != symbol) {
-            try {
-                throw new Exception("Invalid token");
-            } catch (Exception e) {
-
-            }
+            throw new TokenParseException("Invalid Expression");
         }
 
         return this.skipToken();
     }
 
-    private Node buildTextNode() {
+    private Node buildTextNode() throws TokenParseException {
         TextNode node = null;
         if (this.currentToken.isText()) {
             node = new TextNode(this.currentToken.getContent());
@@ -68,7 +62,7 @@ public class Parser {
         return node;
     }
 
-    private Node buildExpressionNode() {
+    private Node buildExpressionNode() throws TokenParseException {
         Node node = null;
         if (this.currentToken.isExpStart()) {
             this.skipToken();
@@ -78,7 +72,7 @@ public class Parser {
         return node;
     }
 
-    private FieldNode buildExp() {
+    private FieldNode buildExp() throws TokenParseException {
         FieldNode node = new FieldNode(this.skipToken().getContent());
 
         while (true) {

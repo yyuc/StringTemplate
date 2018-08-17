@@ -4,7 +4,20 @@
 public class App {
 
     public static void main(String[] args) {
-        String s = "Hey,{{person.name}}, {{person.address.city}} is my home";
-        new Parser(s).Build();
+        String s = "Hey,{{perso{n.name}}, {{person.address.city} is my home";
+        try {
+            new Parser(s).Build();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+//        s="{{person.name}}, {{person.address.city}}";
+//        new Parser(s).Build();
+//        s="hi{{person.name}}";
+//        new Parser(s).Build();
+//        s="this is a test";
+//        new Parser(s).Build();
+//        s="this is a test {{}}";
+//        new Parser(s).Build();
+
     }
 }
