@@ -1,5 +1,8 @@
 package yyuc.st.parser;
 
+import com.sun.deploy.panel.ITreeNode;
+import sun.security.util.Length;
+
 public class Scanner {
     public static class Token {
         private Symbol symbol;
@@ -66,6 +69,11 @@ public class Scanner {
             this.desc = desc;
         }
 
+        @Override
+        public String toString() {
+            return this.desc == null ? this.name() : this.desc;
+        }
+
         private String desc;
     }
 
@@ -116,11 +124,12 @@ public class Scanner {
 
     public Token nextText() {
         int i = this.offset;
+        int length = this.expression.length();
         StringBuilder builder = new StringBuilder();
 
-        while (i < this.expression.length()) {
+        while (i < length) {
             char c = this.expression.charAt(i);
-            if (c == '{' && this.expression.charAt(i + 1) == '{') {
+            if (c == '{' && i + 1 < length && this.expression.charAt(i + 1) == '{') {
                 return new Token(Symbol.Text, builder.toString(), i - this.offset);
             } else {
                 builder.append(c);

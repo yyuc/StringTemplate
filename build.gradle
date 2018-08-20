@@ -11,11 +11,8 @@ plugins {
     id 'java'
 
     // Apply the application plugin to add support for building an application
-    id 'application'
+    id 'java-library'
 }
-
-// Define the main class for the application
-mainClassName = 'App'
 
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
@@ -23,7 +20,7 @@ dependencies {
     compile 'javax:javaee-api:7.0'
 
     // Use JUnit test framework
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 // In this section you declare where to find the dependencies of your project

@@ -51,7 +51,7 @@ public class Parser {
 
     private Scanner.Token skipToken(Scanner.Symbol symbol) throws TokenParseException {
         if (this.currentToken.getSymbol() != symbol) {
-            throw new TokenParseException("Invalid Expression");
+            throw new TokenParseException("syntax error at position " + this.offset + ", expected symbol " + symbol);
         }
 
         return this.skipToken();
