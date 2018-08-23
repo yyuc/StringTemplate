@@ -1,3 +1,5 @@
+The template field access expression should start with '{{' and end with '}}', e.g. {{address.city}}
+
 ##### Usage:
 ```Java
     public class Person {
