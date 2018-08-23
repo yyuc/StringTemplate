@@ -2,7 +2,7 @@ package yyuc.st.parser;
 
 import java.util.ArrayList;
 
-public class Parser {
+class Parser {
     private final Scanner scanner;
     private Scanner.Token currentToken;
     private int offset;
@@ -12,7 +12,7 @@ public class Parser {
         this.scanner = new Scanner(expression);
     }
 
-    public ArrayList<Node> build() throws TokenParseException {
+    public CompositeNode build() throws TokenParseException {
         this.skipToken();
         Node text = buildTextNode();
         if (this.currentToken.isEOF()) {
@@ -36,7 +36,7 @@ public class Parser {
             }
         }
 
-        return list;
+        return new CompositeNode(list);
     }
 
     /**
@@ -51,7 +51,7 @@ public class Parser {
 
     private Scanner.Token skipToken(Scanner.Symbol symbol) throws TokenParseException {
         if (this.currentToken.getSymbol() != symbol) {
-            throw new TokenParseException("Invalid Expression");
+            throw new TokenParseException("syntax error at position " + this.offset + ", expected symbol " + symbol);
         }
 
         return this.skipToken();
@@ -70,13 +70,13 @@ public class Parser {
         Node node = null;
         if (this.currentToken.isExpStart()) {
             this.skipToken();
-            node = new ExpressionNode(this.buildExp());
+            node = new ExpressionNode(this.buildExpression());
             this.skipToken(Scanner.Symbol.ExpEnd);
         }
         return node;
     }
 
-    private FieldNode buildExp() throws TokenParseException {
+    private FieldNode buildExpression() throws TokenParseException {
         FieldNode node = new FieldNode(this.skipToken().getContent());
 
         while (true) {

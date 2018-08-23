@@ -1,39 +1,52 @@
 package yyuc.st.parser;
 
-public class FieldNode extends Node {
+import java.lang.reflect.Field;
+
+final class FieldNode extends Node {
     private FieldNode parent;
 
-    public FieldNode(String content) {
+    FieldNode(String content) {
         this(null, content);
     }
 
-    public FieldNode(FieldNode parent, String content) {
+    FieldNode(FieldNode parent, String content) {
         super(content);
         this.parent = parent;
     }
 
     @Override
-    public Object getValue(Object object) {
+    protected Object resolveValue(Object object) {
         if (this.parent == null) {
             try {
-                return object.getClass().getField(this.getContent()).get(object);
+                Field field = object.getClass().getDeclaredField(this.getContent());
+                if (field == null) {
+                    return null;
+                }
+                field.setAccessible(true);
+                return field.get(object);
             } catch (NoSuchFieldException ex) {
-
+                return null;
             } catch (IllegalAccessException ex) {
+                return null;
             }
         }
         try {
-            Object parent = this.parent.getValue(object);
+            Object parent = this.parent.resolveValue(object);
             if (parent == null) {
                 return null;
             }
-            return parent.getClass().getField(this.getContent()).get(parent);
+
+            Field field = parent.getClass().getDeclaredField(this.getContent());
+            if (field == null) {
+                return null;
+            }
+            field.setAccessible(true);
+            return field.get(parent);
         } catch (NoSuchFieldException ex) {
-
+            return null;
         } catch (IllegalAccessException ex) {
-
+            return null;
         }
-        return null;
     }
 
     @Override

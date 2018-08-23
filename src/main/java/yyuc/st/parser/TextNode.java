@@ -1,13 +1,13 @@
 package yyuc.st.parser;
 
-public class TextNode extends Node {
+final class TextNode extends Node {
 
-    public TextNode(String content) {
+    TextNode(String content) {
         super(content);
     }
 
     @Override
-    public Object getValue(Object object) {
+    protected Object resolveValue(Object object) {
         return this.getContent();
     }
 }

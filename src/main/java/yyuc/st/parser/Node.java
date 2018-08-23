@@ -1,17 +1,16 @@
 package yyuc.st.parser;
 
-public abstract class Node {
+abstract class Node {
     private String content;
 
-    public Node() {
-
+    Node() {
     }
 
-    public Node(String content) {
+    Node(String content) {
         this.content = content;
     }
 
-    public String getContent() {
+    String getContent() {
         return this.content;
     }
 
@@ -20,5 +19,5 @@ public abstract class Node {
         return this.content;
     }
 
-    public abstract Object getValue(Object obj);
+    protected abstract Object resolveValue(Object obj);
 }

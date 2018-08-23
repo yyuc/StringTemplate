@@ -1,16 +1,16 @@
 package yyuc.st.parser;
 
-public class ExpressionNode extends Node {
+final class ExpressionNode extends Node {
     private FieldNode node;
 
-    public ExpressionNode(FieldNode node) {
+    ExpressionNode(FieldNode node) {
         super(null);
         this.node = node;
     }
 
     @Override
-    public Object getValue(Object object) {
-        return this.node.getValue(object);
+    protected Object resolveValue(Object object) {
+        return this.node.resolveValue(object);
     }
 
     @Override
