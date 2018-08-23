@@ -1,9 +1,6 @@
 package yyuc.st.parser;
 
-import com.sun.deploy.panel.ITreeNode;
-import sun.security.util.Length;
-
-public class Scanner {
+class Scanner {
     public static class Token {
         private Symbol symbol;
         private String content;
@@ -151,7 +148,7 @@ public class Scanner {
             int i = this.offset + 1;
             int length = this.expression.length();
 
-            while (i < length && Character.isJavaIdentifierStart(this.expression.charAt(i))) {
+            while (i < length && Character.isJavaIdentifierPart(this.expression.charAt(i))) {
                 i++;
             }
 
