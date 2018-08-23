@@ -52,16 +52,16 @@ public class TemplateResolverTest {
     public void ReturnReplacedTextWhenExpressionIsFieldx() throws TokenParseException {
         TemplateResolver resolver = new TemplateResolver(this.person);
         String result = resolver.resolve("My address is {{address.city}} {{address.addressLine}}");
-        Assert.assertEquals("My address is ?? ???????161?20?201?", result);
+        Assert.assertEquals("My address is 上海 浦东新区严杨路161弄20号201室", result);
     }
 
     public TemplateResolverTest() {
         this.person.setId("f3d84ae5-3431-4385-b83f-1385b73446e4");
         this.person.setName("rick.zhao");
         this.person.getAddress().setId(UUID.randomUUID().toString());
-        this.person.getAddress().setCountry("??");
-        this.person.getAddress().setCity("??");
-        this.person.getAddress().setAddressLine("???????161?20?201?");
+        this.person.getAddress().setCountry("中国");
+        this.person.getAddress().setCity("上海");
+        this.person.getAddress().setAddressLine("浦东新区严杨路161弄20号201室");
     }
 
     private Person person = new Person();
