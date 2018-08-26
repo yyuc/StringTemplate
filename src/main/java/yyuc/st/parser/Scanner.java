@@ -147,8 +147,15 @@ class Scanner {
 
             int i = this.offset + 1;
             int length = this.expression.length();
-
-            while (i < length && Character.isJavaIdentifierPart(this.expression.charAt(i))) {
+            boolean escape = false;
+            while (i < length && (escape ||
+                    (this.expression.charAt(i) != '}' && this.expression.charAt(i) != '.'))) {
+                if (escape) {
+                    escape = false;
+                }
+                if (this.expression.charAt(i) == '\\') {
+                    escape = true;
+                }
                 i++;
             }
 
@@ -156,7 +163,10 @@ class Scanner {
 
             return new Token(Symbol.Exp, content, i - this.offset);
         }
-        throw new TokenParseException("Invalid character '" + start + "' at position" + this.offset + " in '" + this.expression + "'");
+        throw new
+
+                TokenParseException("Invalid character '" + start + "' at position" + this.offset + " in '" + this.expression + "'");
+
     }
 
     public int getOffset() {

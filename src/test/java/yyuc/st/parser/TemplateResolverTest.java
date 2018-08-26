@@ -4,7 +4,10 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.security.InvalidParameterException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class TemplateResolverTest {
@@ -41,23 +44,31 @@ public class TemplateResolverTest {
     }
 
     @Test
-    public void ReturnReplacedTextWhenExpressionIsInheritanceField() throws TokenParseException {
+    public void ReturnReplacedTextWhenExpressionIsField() throws TokenParseException {
         TemplateResolver resolver = new TemplateResolver(this.person);
         String result = resolver.resolve("Hi, {{name}}. Your id is {{id}}");
         Assert.assertEquals("Hi, rick.zhao. Your id is f3d84ae5-3431-4385-b83f-1385b73446e4", result);
     }
 
-
     @Test
-    public void ReturnReplacedTextWhenExpressionIsFieldx() throws TokenParseException {
+    public void ReturnReplacedTextWhenExpressionIsInheritanceField() throws TokenParseException {
         TemplateResolver resolver = new TemplateResolver(this.person);
         String result = resolver.resolve("My address is {{address.city}} {{address.addressLine}}");
         Assert.assertEquals("My address is 上海 浦东新区严杨路161弄20号201室", result);
     }
 
+    @Test
+    public void ReturnReplacedTextWhenExpressionIsFieldx() throws TokenParseException {
+        TemplateResolver resolver = new TemplateResolver(this.person);
+        String result = resolver.resolve("My salary is {{salary ,###\\.##}}");
+        Assert.assertEquals("My salary is 2,228,523.90", result);
+    }
+
     public TemplateResolverTest() {
         this.person.setId("f3d84ae5-3431-4385-b83f-1385b73446e4");
         this.person.setName("rick.zhao");
+        this.person.setSalary(BigDecimal.valueOf(2228523.90));
+        this.person.setBirth(ZonedDateTime.now(ZoneOffset.UTC));
         this.person.getAddress().setId(UUID.randomUUID().toString());
         this.person.getAddress().setCountry("中国");
         this.person.getAddress().setCity("上海");
@@ -75,6 +86,8 @@ public class TemplateResolverTest {
         private String id;
         private String name;
         private Address address;
+        private BigDecimal salary;
+        private ZonedDateTime birth;
     }
 
     @Data

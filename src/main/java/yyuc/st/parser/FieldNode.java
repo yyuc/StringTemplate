@@ -1,16 +1,19 @@
 package yyuc.st.parser;
 
+import com.google.common.base.Strings;
+
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 final class FieldNode extends Node {
     private FieldNode parent;
 
-    FieldNode(String content) {
-        this(null, content);
-    }
-
-    FieldNode(FieldNode parent, String content) {
-        super(content);
+    FieldNode(FieldNode parent, String fieldName, String format, String extension) {
+        super(fieldName, format, extension);
         this.parent = parent;
     }
 
@@ -23,7 +26,7 @@ final class FieldNode extends Node {
                     return null;
                 }
                 field.setAccessible(true);
-                return field.get(object);
+                return this.format(field.get(object));
             } catch (NoSuchFieldException ex) {
                 return null;
             } catch (IllegalAccessException ex) {
@@ -41,7 +44,7 @@ final class FieldNode extends Node {
                 return null;
             }
             field.setAccessible(true);
-            return field.get(parent);
+            return this.format(field.get(parent));
         } catch (NoSuchFieldException ex) {
             return null;
         } catch (IllegalAccessException ex) {
@@ -55,5 +58,25 @@ final class FieldNode extends Node {
             return this.getContent();
         }
         return this.parent.toString() + "." + this.getContent();
+    }
+
+    private Object format(Object object) {
+        if (object == null || Strings.isNullOrEmpty(this.getFormat())) {
+            return object;
+        }
+
+        String format = this.getFormat();
+
+        if (object instanceof BigDecimal) {
+            return new DecimalFormat(format).format(object);
+        } else if (object instanceof ZonedDateTime) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+            if (!Strings.isNullOrEmpty(this.getExtension())) {
+                object = ((ZonedDateTime) object).withZoneSameLocal(ZoneId.of(this.getExtension()));
+            }
+            return formatter.format((ZonedDateTime) object);
+        } else {
+            return object;
+        }
     }
 }

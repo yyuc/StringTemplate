@@ -4,7 +4,7 @@ final class ExpressionNode extends Node {
     private FieldNode node;
 
     ExpressionNode(FieldNode node) {
-        super(null);
+        super(null, null, null);
         this.node = node;
     }
 

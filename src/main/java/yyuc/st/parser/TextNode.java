@@ -3,7 +3,7 @@ package yyuc.st.parser;
 final class TextNode extends Node {
 
     TextNode(String content) {
-        super(content);
+        super(content, null, null);
     }
 
     @Override
