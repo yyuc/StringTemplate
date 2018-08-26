@@ -72,7 +72,7 @@ final class FieldNode extends Node {
         } else if (object instanceof ZonedDateTime) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
             if (!Strings.isNullOrEmpty(this.getExtension())) {
-                object = ((ZonedDateTime) object).withZoneSameLocal(ZoneId.of(this.getExtension()));
+                object = ((ZonedDateTime) object).withZoneSameInstant(ZoneId.of(this.getExtension()));
             }
             return formatter.format((ZonedDateTime) object);
         } else {

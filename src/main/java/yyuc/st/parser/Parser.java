@@ -94,7 +94,7 @@ class Parser {
     }
 
     private FieldNode buildFieldNode(FieldNode parent, String content) {
-        String[] expressions = content.trim().split(" ");
+        String[] expressions = content.trim().split("\\|");
         String fieldName = expressions[0];
         String format = null;
         String extension = null;

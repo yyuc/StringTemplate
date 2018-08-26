@@ -143,29 +143,31 @@ class Scanner {
             return Token_Dot;
         }
 
+        StringBuilder builder = new StringBuilder();
         if (Character.isJavaIdentifierStart(start)) {
-
+            builder.append(start);
             int i = this.offset + 1;
             int length = this.expression.length();
             boolean escape = false;
-            while (i < length && (escape ||
-                    (this.expression.charAt(i) != '}' && this.expression.charAt(i) != '.'))) {
+            while (i < length && (escape || (this.expression.charAt(i) != '}' && this.expression.charAt(i) != '.'))) {
+                char c = this.expression.charAt(i);
+                if (c == '\\' && !escape) {
+                    escape = true;
+                    i++;
+                    continue;
+                }
+
+                builder.append(c);
+
                 if (escape) {
                     escape = false;
-                }
-                if (this.expression.charAt(i) == '\\') {
-                    escape = true;
                 }
                 i++;
             }
 
-            String content = this.expression.substring(this.offset, i);
-
-            return new Token(Symbol.Exp, content, i - this.offset);
+            return new Token(Symbol.Exp, builder.toString(), i - this.offset);
         }
-        throw new
-
-                TokenParseException("Invalid character '" + start + "' at position" + this.offset + " in '" + this.expression + "'");
+        throw new TokenParseException("Invalid character '" + start + "' at position" + this.offset + " in '" + this.expression + "'");
 
     }
 
